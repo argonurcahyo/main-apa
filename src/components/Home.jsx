@@ -8,6 +8,7 @@ import Pagination from './Pagination'
 
 const Home = () => {
  let { page } = useParams()
+ let itemPerPage = 24
  const [games, setGames] = useState([])
 
  if (!page) page = 1
@@ -18,11 +19,13 @@ const Home = () => {
     {
      params: {
       fields: "name,rating",
-      limit: 20,
-      offset: 20 * (page - 1),
+      limit: itemPerPage,
+      offset: itemPerPage * (page - 1),
       order: "rating:desc",
-      'filter[platforms][eq]': 48,
-      'filter[rating][gt]': '0'
+      // 'filter[platforms][eq]': 48,
+      'filter[category][eq]': '0',
+      'filter[rating][gt]': '0',
+      // 'filter[version_parent][eq]': 'null'
      }
     });
    setGames(fetchData.data);
@@ -46,18 +49,28 @@ const Home = () => {
     </Col>
    </Row>
    <Row>
-    <Pagination />
+    <Pagination num={10} />
    </Row>
-   <Row>
-    {games && games.map((g, i) => {
+   {games.length > 0 ?
+    <>
+     <Row>
+      <h4>Showing entries {itemPerPage * (page - 1) + 1} - {itemPerPage * (page - 1) + games?.length}</h4>
+     </Row>
+     <Row>
+      {games && games.map((g, i) => (
+       <Col key={i} xs={6} sm={4} md={3} lg={2} xl={2}>
+        <GameCards id={g?.id} />
+       </Col>
+      ))}
+     </Row>
+    </> : <>
+     No content available
+    </>
 
-     return <Col key={i} xs={6} sm={4} md={3} lg={2} xl={2}>
-      <GameCards id={g?.id} />
-     </Col>
-    })}
-   </Row>
+   }
+
    <Row>
-    <Pagination />
+    <Pagination num={10} />
    </Row>
   </Container>
  )

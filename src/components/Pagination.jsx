@@ -1,8 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-const Pagination = () => {
- let nums = [...Array(5).keys()]
+const Pagination = ({ num = 5 }) => {
+ let nums = [...Array(num).keys()]
 
  return (
   <ul className="pagination">

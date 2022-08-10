@@ -6,6 +6,7 @@ const TOKEN = process.env.REACT_APP_IGDB_TOKEN
 const CORS_PROXY = 'https://argo-cors.herokuapp.com/'
 const baseUrl = 'https://api.igdb.com/v4/';
 export const BASE_IMG_URL = 'https://images.igdb.com/igdb/image/upload/t_original/'
+export const BASE_IMG_URL_THUMB = 'https://images.igdb.com/igdb/image/upload/t_thumb/'
 
 export const categoryEnum = {
     0: 'main_game',

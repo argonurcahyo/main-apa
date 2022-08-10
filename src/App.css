@@ -1,4 +1,15 @@
 .card {
   padding: 0;
   margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.game-card.card .card-img-top {
+  height: 210.656px;
+  object-fit: cover;
+}
+
+.game-card.card .card-body {
+  height: 5rem;
+  overflow-y: hidden;
 }

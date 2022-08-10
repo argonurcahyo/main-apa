@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Image, Modal } from 'react-bootstrap'
+import { Link } from 'react-router-dom';
 import igdb, { BASE_IMG_URL } from '../apis/igdb';
 import LoadingCard from './LoadingCard';
 
@@ -13,7 +14,7 @@ const GameCards = ({ id }) => {
    const fetchData = await igdb.get(`games/${id}`,
     {
      params: {
-      fields: "*,platforms.*,cover.*,screenshots.*,themes.*",
+      fields: "*,platforms.*,platforms.platform_logo.*,cover.*,screenshots.*,themes.*,release_dates.*",
      }
     });
    setGame(fetchData.data[0]);
@@ -37,21 +38,35 @@ const GameCards = ({ id }) => {
  return (
   <>
 
-   <Card style={{ padding: '0', width: '10rem' }} onClick={handleClick}>
+   <Card style={{ padding: '0', width: '10rem' }} onClick={handleClick} className="game-card">
     <Card.Img
      variant="top"
      src={`${BASE_IMG_URL}${game?.cover?.image_id}.jpg`}
     />
     <Card.Body>
-     <Card.Title>{game?.name}</Card.Title>
+     <Card.Subtitle>{game?.name}</Card.Subtitle>
     </Card.Body>
    </Card>
 
    <Modal show={open} onHide={handleClose}>
     <Modal.Header closeButton>
-     <Modal.Title>{game?.name}</Modal.Title>
+     <Modal.Title>
+      <Link to={`/game/${id}`}>
+       {game?.name}
+      </Link>
+     </Modal.Title>
     </Modal.Header>
     <Modal.Body>
+     {game?.platforms?.length > 0 && (
+      <>
+       {game.platforms?.map((p, i) => (
+        <Image
+         style={{ width: "2rem", marginRight: "5px" ,marginBottom:"10px"}}
+         src={`${BASE_IMG_URL}${p.platform_logo?.image_id}.jpg`} />
+       ))}
+       <br />
+      </>
+     )}
      {game?.screenshots ?
       <>
        <div style={{ display: modalImageLoading ? 'block' : 'none' }}>
