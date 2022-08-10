@@ -2,10 +2,15 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import igdb from '../apis/igdb'
+import { useParams } from 'react-router-dom'
 import GameCards from './GameCards'
+import Pagination from './Pagination'
 
 const Home = () => {
+ let { page } = useParams()
  const [games, setGames] = useState([])
+
+ if (!page) page = 1
 
  const fetchGames = async () => {
   try {
@@ -14,6 +19,7 @@ const Home = () => {
      params: {
       fields: "name,rating",
       limit: 20,
+      offset: 20 * (page - 1),
       order: "rating:desc",
       'filter[platforms][eq]': 48,
       'filter[rating][gt]': '0'
@@ -28,8 +34,9 @@ const Home = () => {
  }
 
  useEffect(() => {
+  setGames([])
   fetchGames()
- }, []);
+ }, [page]);
 
  return (
   <Container>
@@ -39,15 +46,18 @@ const Home = () => {
     </Col>
    </Row>
    <Row>
+    <Pagination />
+   </Row>
+   <Row>
     {games && games.map((g, i) => {
 
      return <Col key={i} xs={6} sm={4} md={3} lg={2} xl={2}>
       <GameCards id={g?.id} />
      </Col>
-
-
     })}
-
+   </Row>
+   <Row>
+    <Pagination />
    </Row>
   </Container>
  )

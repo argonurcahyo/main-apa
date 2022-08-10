@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Image, Modal } from 'react-bootstrap'
 import igdb, { BASE_IMG_URL } from '../apis/igdb';
+import LoadingCard from './LoadingCard';
 
 const GameCards = ({ id }) => {
  const [game, setGame] = useState({})
  const [open, setOpen] = useState(false)
+ const [modalImageLoading, setModalImageLoading] = useState(true)
 
  const fetchGame = async (id) => {
   try {
@@ -31,7 +33,7 @@ const GameCards = ({ id }) => {
   console.log(game)
  }
  const handleClose = () => setOpen(false)
-
+ const handleLoad = () => setModalImageLoading(false)
  return (
   <>
 
@@ -51,13 +53,27 @@ const GameCards = ({ id }) => {
     </Modal.Header>
     <Modal.Body>
      {game?.screenshots ?
-      <Image
-       src={`${BASE_IMG_URL}${game?.screenshots[0]?.image_id}.jpg`}
-       style={{ width: "100%" }}
-      /> : <>No Image<br /></>
+      <>
+       <div style={{ display: modalImageLoading ? 'block' : 'none' }}>
+        <LoadingCard />
+       </div>
+
+       <div style={{ display: modalImageLoading ? 'none' : 'block' }}>
+        <Image
+         src={`${BASE_IMG_URL}${game?.screenshots[0]?.image_id}.jpg`}
+         style={{ width: "100%", borderRadius: "5px", marginBottom: '10px' }}
+         onLoad={handleLoad}
+        />
+       </div>
+      </>
+      : <>No Image<br /></>
      }
 
-     {game?.summary ? game.summary : "No summary"}
+     <div style={{ padding: "1rem" }}>
+      {game?.summary ? game.summary : "No summary"}
+     </div>
+
+
     </Modal.Body>
     <Modal.Footer>
      <Button variant="secondary" onClick={handleClose}>
